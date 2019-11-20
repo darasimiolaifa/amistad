@@ -28,6 +28,25 @@ const isEmail = (email) => {
   else return false;
 }
 const emptyErrorMessage = 'Must not be empty';
+let idToken = '';
+const FBAuth = async (req, res, next) => {
+  try {
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      idToken = req.headers.authorization.replace('Bearer ', '');
+    } else {
+      return res.status(403).json({ error: 'Unauthorized.' });
+    }
+    const decodedUser = await admin.auth().verifyIdToken(idToken);
+    console.log(decodedUser);
+    req.user = decodedUser;
+    const data = await db.collection('users').where('userId', '==', req.user.uid).limit(1).get();
+    req.user.handle = data.docs[0].data().handle;
+    return next();
+  } catch (error) {
+    console.log('Error while verifying token ', error);
+    return res.status(403).json(error);
+  }
+}
 
 app.get('/screams', async (req, res) => {
   try {
@@ -47,11 +66,12 @@ app.get('/screams', async (req, res) => {
   }
 });
 
-app.post('/screams', async (req, res) => {
+app.post('/screams', FBAuth, async (req, res) => {
   try {
-    const { body: { userhandle, body } } = req;
+    const { body: { body } } = req;
+    const { user: { handle: userHandle } } = req;
     const doc = await db.collection('screams').add({
-      userhandle,
+      userHandle,
       body,
       createdAt: new Date().toISOString() 
     });
