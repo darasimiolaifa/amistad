@@ -6,7 +6,7 @@ const os = require('os');
 
 const { db, admin } = require('../util/admin');
 const config  = require('../util/config');
-const { validateSignupData, validateLoginData } = require('../util/validators');
+const { validateSignupData, validateLoginData, reduceUserDetails } = require('../util/validators');
 
 firebase.initializeApp(config);
 
@@ -70,6 +70,36 @@ exports.login = async (req, res) => {
   }
 }
 
+exports.addUserDetails = async (req, res) => {
+  try {
+    const userDetails = reduceUserDetails(req.body);
+    await db.doc(`/users/${req.user.handle}`).update(userDetails);
+    return res.status(200).json({ message: 'Details added successfully.'});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error });
+  }
+}
+
+exports.getAuthenticatedUser = async (req, res) => {
+  try {
+    const userDetails = {};
+    userDetails.likes = [];
+    const userDoc  = await db.doc(`/users/${req.user.handle}`).get();
+    if (userDoc.exists) {
+      userDetails.credentials = userDoc.data();
+    }
+    const likesDocs = await db.collection('likes').where('userhandle', '==', req.user.handle).get();
+    likesDocs.forEach(doc => {
+      userDetails.likes.push(doc.data());
+    });
+    return res.status(200).json(userDetails);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error });
+  }
+}
+
 exports.uploadImage = async (req, res) => {
   const busboy = new Busboy({ headers: req.headers });
   let imageFileName;
@@ -101,6 +131,9 @@ exports.uploadImage = async (req, res) => {
       })
       .then(() => {
         return res.status(200).json({ message: 'Image uploaded successfully.'});
+      })
+      .catch (error => {
+        console.error(error);
       });
     });
     busboy.end(req.rawBody);  
