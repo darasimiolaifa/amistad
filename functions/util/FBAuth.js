@@ -11,7 +11,9 @@ module.exports = async (req, res, next) => {
     const decodedUser = await admin.auth().verifyIdToken(idToken);
     req.user = decodedUser;
     const data = await db.collection('users').where('userId', '==', req.user.uid).limit(1).get();
-    req.user.handle = data.docs[0].data().handle;
+    const { handle, imageUrl } = data.docs[0].data();
+    req.user.handle = handle;
+    req.user.imageUrl = imageUrl;
     return next();
   } catch (error) {
     console.log('Error while verifying token ', error);
