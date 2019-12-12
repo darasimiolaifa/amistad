@@ -63,3 +63,5 @@ node_modules/
 
 # dotenv environment variables file
 .env
+
+# set GOOGLE_APPLICATION_CREDENTIALS=C:\Users\OLAIFA JULIUS B\Downloads\Amistad-847d07501f4b.json
