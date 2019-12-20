@@ -81,17 +81,66 @@ exports.addUserDetails = async (req, res) => {
   }
 }
 
-exports.getAuthenticatedUser = async (req, res) => {
+exports.getUserDetails = async ({ params }, res) => {
+  try {
+    const userDetails = {};
+    userDetails.screams = [];
+    const { handle: userHandle } = params;
+    const user = await db.doc(`users/${userHandle}`).get();
+    if (user.exists) {
+      userDetails.user = user.data();
+    }
+    const userScreams = await db.collection('screams').where('userHandle', '==', userHandle).orderBy('createdAt', 'desc').get();
+    userScreams.forEach(scream => {
+      userDetails.screams.push({
+        screamId: scream.id,
+        userHandle: scream.data().userHandle,
+        body: scream.data().body,
+        imageUrl: scream.data().imageUrl,
+        likeCount: scream.data().likeCount,
+        commentCount: scream.data().commentCount,
+        createdAt: scream.data().createdAt
+      });
+    });
+    
+    return res.status(200).json(userDetails);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error });
+  }
+}
+
+exports.getAuthenticatedUser = async ({ user }, res) => {
+  const { handle: userHandle } = user;
   try {
     const userDetails = {};
     userDetails.likes = [];
-    const userDoc  = await db.doc(`/users/${req.user.handle}`).get();
+    userDetails.notifications = [];
+    
+    const unresolvedUser  = db.doc(`/users/${userHandle}`).get();
+    const unresolvedLikes = db.collection('likes').where('userHandle', '==', userHandle).get();
+    const unresolvedNotifications = db.collection('notifications').where('receipient', '==', userHandle).orderBy('createdAt', 'desc').limit(10).get();
+    
+    const unresolvedPromises = [unresolvedUser, unresolvedLikes, unresolvedNotifications];    
+    const [userDoc, likesDocs, notificationsDocs] = await Promise.all(unresolvedPromises);
+
     if (userDoc.exists) {
       userDetails.credentials = userDoc.data();
     }
-    const likesDocs = await db.collection('likes').where('userhandle', '==', req.user.handle).get();
+    
     likesDocs.forEach(doc => {
       userDetails.likes.push(doc.data());
+    });
+    notificationsDocs.forEach(notification => {
+      userDetails.notifications.push({
+        receipient: notification.data().receipient,
+        createdAt: notification.data().createdAt,
+        sender: notification.data().sender,
+        type: notification.data().type,
+        screamId: notification.data().screamId,
+        read: notification.data().read,
+        notificationId: notification.id
+      });
     });
     return res.status(200).json(userDetails);
   } catch (error) {
@@ -140,5 +189,21 @@ exports.uploadImage = async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.code });
+  }
+}
+
+exports.markNotificationRead = async ({ body }, res) => {
+  try {
+    let batch = db.batch();
+    const { notificationIds } = body;
+    notificationIds.forEach(notificationId => {
+      const notification = db.doc(`notifications/${notificationId}`);
+      batch.update(notification, { read: true });
+    });
+    await batch.commit();
+    return res.status(200).json({ message: 'Notifications marked read.'});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error });
   }
 }
