@@ -2,6 +2,7 @@ const functions = require('firebase-functions');
 const app = require('express')();
 
 const FBAuth = require('./util/FBAuth');
+
 const {
   postOneScream,
   getAllScreams,
@@ -17,8 +18,16 @@ const {
   login,
   addUserDetails,
   getAuthenticatedUser,
+  getUserDetails,
+  markNotificationRead,
   uploadImage
 } = require('./handlers/users');
+
+const {
+  likeNotificationHandler,
+  unlikeNotificationHandler,
+  commentNotificationHandler
+} = require('./handlers/dbTriggers');
 
 app.get('/screams', getAllScreams);
 app.post('/screams', FBAuth, postOneScream);
@@ -33,5 +42,10 @@ app.post('/login', login);
 app.post('/user', FBAuth, addUserDetails);
 app.get('/user', FBAuth, getAuthenticatedUser);
 app.post('/users/image', FBAuth, uploadImage);
+app.get('/user/:handle', getUserDetails);
+app.post('/notifications', FBAuth, markNotificationRead);
 
 exports.api = functions.https.onRequest(app);
+exports.createNotificationOnLike = functions.firestore.document('likes/{id}').onCreate(likeNotificationHandler);
+exports.deleteNotificationOnUnlike = functions.firestore.document('likes/{id}').onDelete(unlikeNotificationHandler);
+exports.createNotificationOnComment = functions.firestore.document('comments/{id}').onCreate(commentNotificationHandler);
