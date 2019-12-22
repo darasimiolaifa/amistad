@@ -26,7 +26,9 @@ const {
 const {
   likeNotificationHandler,
   unlikeNotificationHandler,
-  commentNotificationHandler
+  commentNotificationHandler,
+  changeUserImageHandler,
+  deleteScreamHandler
 } = require('./handlers/dbTriggers');
 
 app.get('/screams', getAllScreams);
@@ -49,3 +51,5 @@ exports.api = functions.https.onRequest(app);
 exports.createNotificationOnLike = functions.firestore.document('likes/{id}').onCreate(likeNotificationHandler);
 exports.deleteNotificationOnUnlike = functions.firestore.document('likes/{id}').onDelete(unlikeNotificationHandler);
 exports.createNotificationOnComment = functions.firestore.document('comments/{id}').onCreate(commentNotificationHandler);
+exports.onUserImageChange = functions.firestore.document('users/{userId}').onUpdate(changeUserImageHandler);
+exports.onScreamDelete = functions.firestore.document('screams/{screamId}').onDelete(deleteScreamHandler);

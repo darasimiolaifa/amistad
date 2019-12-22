@@ -13,12 +13,7 @@ firebase.initializeApp(config);
 exports.signup = async (req, res) => {
   try {
     const { body } = req;
-    const newUser = {
-      email: body.email,
-      password: body.password,
-      confirmPassword: body.confirmPassword,
-      handle: body.handle
-    }
+    const newUser = { ...body }
     const { errors, valid } = validateSignupData(newUser);
     if (!valid) return res.status(400).json(errors);
     
@@ -44,17 +39,14 @@ exports.signup = async (req, res) => {
     if (error.code === 'auth/email-already-in-use') {
       return res.status(400).json({ email: error.message });
     }
-    return res.status(500).json({ error: error.code });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 
 exports.login = async (req, res) => {
   try {
     const { body } = req;
-    const user = {
-      email: body.email,
-      password: body.password
-    }
+    const user = { ...body };
     
     const { errors, valid } = validateLoginData(user);
     if (!valid) return res.status(400).json(errors);
@@ -64,8 +56,6 @@ exports.login = async (req, res) => {
     return res.status(200).json({ token });
   } catch (error) {
     console.error(error);
-    if (error.code === 'auth/user-not-found') return res.status(404).json({ error: 'This user does not exist in the records'});
-    else if (error.code === 'auth/wrong-password') return res.status(403).json({ general: 'Invalid login credentials.'});
     return res.status(500).json({ error: error.code });
   }
 }
@@ -94,12 +84,7 @@ exports.getUserDetails = async ({ params }, res) => {
     userScreams.forEach(scream => {
       userDetails.screams.push({
         screamId: scream.id,
-        userHandle: scream.data().userHandle,
-        body: scream.data().body,
-        imageUrl: scream.data().imageUrl,
-        likeCount: scream.data().likeCount,
-        commentCount: scream.data().commentCount,
-        createdAt: scream.data().createdAt
+        ...scream.data()
       });
     });
     
@@ -128,17 +113,12 @@ exports.getAuthenticatedUser = async ({ user }, res) => {
       userDetails.credentials = userDoc.data();
     }
     
-    likesDocs.forEach(doc => {
-      userDetails.likes.push(doc.data());
+    likesDocs.forEach(like => {
+      userDetails.likes.push(like.data());
     });
     notificationsDocs.forEach(notification => {
       userDetails.notifications.push({
-        receipient: notification.data().receipient,
-        createdAt: notification.data().createdAt,
-        sender: notification.data().sender,
-        type: notification.data().type,
-        screamId: notification.data().screamId,
-        read: notification.data().read,
+        ...notification.data(),
         notificationId: notification.id
       });
     });
@@ -192,14 +172,23 @@ exports.uploadImage = async (req, res) => {
   }
 }
 
-exports.markNotificationRead = async ({ body }, res) => {
+exports.markNotificationRead = async ({ body, user }, res) => {
   try {
     let batch = db.batch();
     const { notificationIds } = body;
-    notificationIds.forEach(notificationId => {
+    const { handle } = user;
+    const userDoc = await db.collection('users').where('handle', '==', handle).limit(1).get();
+    const userHandle = userDoc.docs[0].data().handle;
+    for (const notificationId of notificationIds) {
       const notification = db.doc(`notifications/${notificationId}`);
-      batch.update(notification, { read: true });
-    });
+      const notificationDoc = await notification.get();
+      const { receipient } = notificationDoc.data();
+      if (receipient !== userHandle) {
+        return res.status(403).json({ error: 'One or more of the screams do not belong to you.'});
+      } else {
+        batch.update(notification, { read: true });
+      }
+    }
     await batch.commit();
     return res.status(200).json({ message: 'Notifications marked read.'});
   } catch (error) {

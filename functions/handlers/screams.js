@@ -3,11 +3,11 @@ const { db } = require('../util/admin');
 exports.postOneScream = async ({ body, user }, res) => {
   try {
     const { body: screamBody } = body;
-    const { handle: userHandle, imageUrl } = user;
+    const { handle: userHandle, imageUrl: userImage } = user;
     const newScream = {
       userHandle,
       body: screamBody,
-      imageUrl,
+      userImage,
       likeCount: 0,
       commentCount: 0,
       createdAt: new Date().toISOString() 
@@ -28,13 +28,8 @@ exports.getAllScreams = async (req, res) => {
     let screams = [];
     data.forEach(doc => {
       screams.push({
+        ...doc.data(),
         screamId: doc.id,
-        userHandle: doc.data().userHandle,
-        body: doc.data().body,
-        imageUrl: doc.data().imageUrl,
-        likeCount: doc.data().likeCount,
-        commentCount: doc.data().commentCount,
-        createdAt: doc.data().createdAt
       });
     });
     return res.status(200).json(screams);
