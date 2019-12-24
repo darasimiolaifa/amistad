@@ -1,11 +1,11 @@
-import React from 'react'
-import Link from 'react-router-dom/Link';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
-function Navbar() {
+const Navbar = () => {
   return (
     <div>
       <AppBar>
