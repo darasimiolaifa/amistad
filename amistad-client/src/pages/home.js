@@ -8,12 +8,12 @@ function Home() {
   
   useEffect(() => {
     const fetchData = async () => {
-      const screams = await axios.get('/screams');
-      setScream(screams.data);
+      const { data: screams} = await axios.get('/screams');
+      setScream(screams);
     }
     fetchData();
   });
-  const recentScreamsMarkup = screams.length > 0 ? (screams.map(scream => <Scream key={scream.screamId} scream={scream} />)) : <p>Loding...</p>
+  const recentScreamsMarkup = screams.length > 0 ? (screams.map(scream => <Scream key={scream.screamId} scream={scream} />)) : <p>Loading...</p>
   return (
     <Grid container spacing={2}>
       <Grid item sm={8} xs={12}>

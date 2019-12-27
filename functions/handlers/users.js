@@ -56,7 +56,7 @@ exports.login = async (req, res) => {
     return res.status(200).json({ token });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error: error.code });
+    return res.status(500).json({ general: 'Wrong credentials. Please try again later.' });
   }
 }
 
@@ -67,7 +67,7 @@ exports.addUserDetails = async (req, res) => {
     return res.status(200).json({ message: 'Details added successfully.'});
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 
@@ -91,7 +91,7 @@ exports.getUserDetails = async ({ params }, res) => {
     return res.status(200).json(userDetails);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 
@@ -125,7 +125,7 @@ exports.getAuthenticatedUser = async ({ user }, res) => {
     return res.status(200).json(userDetails);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 
@@ -168,7 +168,7 @@ exports.uploadImage = async (req, res) => {
     busboy.end(req.rawBody);  
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: error.code });
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -193,6 +193,6 @@ exports.markNotificationRead = async ({ body, user }, res) => {
     return res.status(200).json({ message: 'Notifications marked read.'});
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }

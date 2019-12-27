@@ -18,7 +18,7 @@ exports.postOneScream = async ({ body, user }, res) => {
     return res.status(201).json(responseScream);
   } catch(err) {
     console.error(err);
-    return res.status(500).json({ error: 'Something went wrong'});
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.'});
   }
 }
 
@@ -57,7 +57,7 @@ exports.getSingleScream = async ({ params }, res) => {
     return res.status(200).json(screamData);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 
@@ -81,7 +81,7 @@ exports.commentOnScream = async ({ body, user, params }, res) => {
     return res.status(200).json(newComment);
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ error });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 
@@ -113,7 +113,7 @@ exports.likeScream = async ({ params, user }, res) => {
       }
     }
   } catch (error) {
-    return res.status(500).json({ error });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 exports.unlikeScream = async ({ params, user }, res) => {
@@ -141,7 +141,7 @@ exports.unlikeScream = async ({ params, user }, res) => {
       }
     }
   } catch (error) {
-    return res.status(500).json({ error: error.code });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
 
@@ -159,6 +159,6 @@ exports.deleteScream = async ({ params, user }, res) => {
       return res.status(200).json({ message: 'Scream deleted successfully.' });
     }
   } catch (error) {
-    return res.status(500).json({ error: error.code });
+    return res.status(500).json({ general: 'Something went wrong. Please try again later.' });
   }
 }
