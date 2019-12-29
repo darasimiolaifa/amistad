@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
@@ -6,7 +7,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import Button from "@material-ui/core/Button";
 import PropTypes from "prop-types";
 import AppIcon from "../images/amistad-icon.png";
-import axios from "axios";
+import { signupUser, updateFormData } from "../redux/actions/userActions";
 import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
 
@@ -15,69 +16,29 @@ const styles = theme => ({
 });
 
 function Signup({ classes, history }) {
-  const initialState = {
-    email: "",
-    password: "",
-    confirmPassword: "",
-    handle: "",
-    isLoading: false,
-    errors: {}
-  };
-  const [formValues, setFormValues] = useState(initialState);
+  const dispatch = useDispatch();
+  const {
+    email,
+    password,
+    confirmPassword,
+    handle,
+    isLoading,
+    errors
+  } = useSelector(state => ({ ...state.user, ...state.ui }));
+
   const handleSubmit = async event => {
-    try {
-      event.preventDefault();
-      setFormValues({
-        ...formValues,
-        email: "",
-        password: "",
-        confirmPassword: "",
-        handle: "",
-        isLoading: true
-      });
-      const {
-        data: { token }
-      } = await axios.post("/signup", {
-        email: formValues.email,
-        password: formValues.password,
-        confirmPassword: formValues.confirmPassword,
-        handle: formValues.handle
-      });
-      setFormValues({
-        ...formValues,
-        email: "",
-        password: "",
-        confirmPassword: "",
-        handle: "",
-        isLoading: false
-      });
-      await localStorage.setItem("amistadToken", `Bearer ${token}`);
-      history.push("/");
-    } catch (error) {
-      console.log(error.response.data);
-      setFormValues({
-        ...formValues,
-        email: "",
-        password: "",
-        confirmPassword: "",
-        handle: "",
-        errors: error.response.data
-      });
-    }
+    event.preventDefault();
+    await signupUser(
+      dispatch,
+      { email, password, confirmPassword, handle },
+      history
+    );
   };
-  const handleFocus = event => {
-    setFormValues({
-      ...formValues,
-      [event.target.name]: event.target.value,
-      errors: {}
-    });
+
+  const handleChange = ({ target }) => {
+    updateFormData(dispatch, target);
   };
-  const handleChange = event => {
-    setFormValues({
-      ...formValues,
-      [event.target.name]: event.target.value
-    });
-  };
+
   return (
     <Grid container className={classes.form}>
       <Grid item sm />
@@ -93,11 +54,10 @@ function Signup({ classes, history }) {
             type="email"
             label="Email"
             className={classes.textField}
-            value={formValues.email}
-            helperText={formValues.errors.email}
-            error={formValues.errors.email ? true : false}
+            value={email}
+            helperText={errors.email}
+            error={errors.email ? true : false}
             onChange={handleChange}
-            onFocus={handleFocus}
             fullWidth
           />
 
@@ -107,11 +67,10 @@ function Signup({ classes, history }) {
             type="password"
             label="Password"
             className={classes.textField}
-            value={formValues.password}
-            helperText={formValues.errors.password}
-            error={formValues.errors.password ? true : false}
+            value={password}
+            helperText={errors.password}
+            error={errors.password ? true : false}
             onChange={handleChange}
-            onFocus={handleFocus}
             fullWidth
           />
 
@@ -121,11 +80,10 @@ function Signup({ classes, history }) {
             type="password"
             label="Confirm Password"
             className={classes.textField}
-            value={formValues.confirmPassword}
-            helperText={formValues.errors.confirmPassword}
-            error={formValues.errors.confirmPassword ? true : false}
+            value={confirmPassword}
+            helperText={errors.confirmPassword}
+            error={errors.confirmPassword ? true : false}
             onChange={handleChange}
-            onFocus={handleFocus}
             fullWidth
           />
 
@@ -135,17 +93,16 @@ function Signup({ classes, history }) {
             type="text"
             label="Handle"
             className={classes.textField}
-            value={formValues.handle}
-            helperText={formValues.errors.handle}
-            error={formValues.errors.handle ? true : false}
+            value={handle}
+            helperText={errors.handle}
+            error={errors.handle ? true : false}
             onChange={handleChange}
-            onFocus={handleFocus}
             fullWidth
           />
 
-          {formValues.errors.general && (
+          {errors.general && (
             <Typography variant="body2" className={classes.customError}>
-              {formValues.errors.general}
+              {errors.general}
             </Typography>
           )}
           <Button
@@ -153,10 +110,10 @@ function Signup({ classes, history }) {
             variant="contained"
             color="primary"
             className={classes.button}
-            disabled={formValues.isLoading}
+            disabled={isLoading}
           >
             Signup
-            {formValues.isLoading && (
+            {isLoading && (
               <CircularProgress size={30} className={classes.progress} />
             )}
           </Button>

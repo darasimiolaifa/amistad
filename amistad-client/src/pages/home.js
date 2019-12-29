@@ -12,7 +12,7 @@ function Home() {
       setScream(screams);
     }
     fetchData();
-  });
+  }, []);
   const recentScreamsMarkup = screams.length > 0 ? (screams.map(scream => <Scream key={scream.screamId} scream={scream} />)) : <p>Loading...</p>
   return (
     <Grid container spacing={2}>
