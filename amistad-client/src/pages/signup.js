@@ -15,7 +15,7 @@ const styles = theme => ({
   ...theme.otherStyling
 });
 
-function Signup({ classes, history }) {
+const Signup = ({ classes, history }) => {
   const dispatch = useDispatch();
   const {
     email,
@@ -129,7 +129,7 @@ function Signup({ classes, history }) {
       <Grid item sm />
     </Grid>
   );
-}
+};
 
 Signup.propTypes = {
   classes: PropTypes.object.isRequired

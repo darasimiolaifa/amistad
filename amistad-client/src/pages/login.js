@@ -15,7 +15,7 @@ const styles = theme => ({
   ...theme.otherStyling
 });
 
-function Login({ classes, history }) {
+const Login = ({ classes, history }) => {
   const dispatch = useDispatch();
   const { email, password, isLoading, errors } = useSelector(state => ({
     ...state.user,
@@ -93,7 +93,7 @@ function Login({ classes, history }) {
       <Grid item sm />
     </Grid>
   );
-}
+};
 
 Login.propTypes = {
   classes: PropTypes.object.isRequired
