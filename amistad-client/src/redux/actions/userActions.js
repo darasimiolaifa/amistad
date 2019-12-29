@@ -4,7 +4,8 @@ import {
   UPDATE_FORM_DATA,
   SET_ERRORS,
   SET_USER,
-  SET_UNAUTHENTICATED
+  SET_UNAUTHENTICATED,
+  LOADING_USER
 } from "../types";
 
 export const loginUser = async (dispatch, { email, password }, history) => {
@@ -92,6 +93,7 @@ export const updateFormData = (dispatch, target) => {
 
 export const getUserData = async dispatch => {
   try {
+    dispatch({ type: LOADING_USER });
     const { data } = await axios.get("/user");
     dispatch({ type: SET_USER, payload: data });
   } catch ({ response: { data } }) {
