@@ -8,12 +8,14 @@ import {
   LOADING_USER
 } from "../types";
 
+const endpoint = "https://us-central1-amistad-9f94a.cloudfunctions.net/api";
+
 export const loginUser = async (dispatch, { email, password }, history) => {
   try {
     dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: true } });
     const {
       data: { token }
-    } = await axios.post("/login", {
+    } = await axios.post(`${endpoint}/login`, {
       email,
       password
     });
@@ -43,7 +45,7 @@ export const signupUser = async (
     dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: true } });
     const {
       data: { token }
-    } = await axios.post("/signup", {
+    } = await axios.post(`${endpoint}/signup`, {
       email,
       password,
       confirmPassword,
@@ -94,9 +96,20 @@ export const updateFormData = (dispatch, target) => {
 export const getUserData = async dispatch => {
   try {
     dispatch({ type: LOADING_USER });
-    const { data } = await axios.get("/user");
+    const { data } = await axios.get(`${endpoint}/user`);
     dispatch({ type: SET_USER, payload: data });
   } catch ({ response: { data } }) {
     dispatch({ type: SET_ERRORS, payload: { errors: data } });
+  }
+};
+
+export const uploadProfileImage = async (dispatch, formData) => {
+  try {
+    dispatch({ type: LOADING_USER });
+    await axios.post(`${endpoint}/users/image`, formData);
+    await getUserData(dispatch);
+  } catch ({ response: { data } }) {
+    await getUserData(dispatch);
+    console.log(data);
   }
 };

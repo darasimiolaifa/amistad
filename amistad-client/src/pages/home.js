@@ -4,12 +4,14 @@ import Grid from "@material-ui/core/Grid";
 import Scream from "../components/Scream";
 import Profile from "../components/Profile";
 
+const endpoint = "https://us-central1-amistad-9f94a.cloudfunctions.net/api";
+
 const Home = () => {
   const [screams, setScream] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data: screams } = await axios.get("/screams");
+      const { data: screams } = await axios.get(`${endpoint}/screams`);
       setScream(screams);
     };
     fetchData();
