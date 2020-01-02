@@ -113,3 +113,14 @@ export const uploadProfileImage = async (dispatch, formData) => {
     console.log(data);
   }
 };
+
+export const editUserDetails = async (dispatch, userDetails) => {
+  try {
+    dispatch({ type: LOADING_USER });
+    await axios.post(`${endpoint}/user`, userDetails);
+    await getUserData(dispatch);
+  } catch ({ response: { data } }) {
+    console.log(data);
+    await getUserData(dispatch);
+  }
+};
