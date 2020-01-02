@@ -8,12 +8,14 @@ import MuiLink from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
+import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
 import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import LocationOn from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
-import { uploadProfileImage } from "../redux/actions/userActions";
+import { logoutUser, uploadProfileImage } from "../redux/actions/userActions";
+import EditDetails from "./EditDetails";
 
 const styles = theme => ({
   paper: {
@@ -83,6 +85,10 @@ function Profile({ classes }) {
     fileinput.click();
   };
 
+  const handleLogout = () => {
+    logoutUser(dispatch);
+  };
+
   return !loading ? (
     authenticated ? (
       <Paper className={classes.paper}>
@@ -137,6 +143,12 @@ function Profile({ classes }) {
             <CalendarToday color="primary" />{" "}
             <span>Joined {dayjs(createdAt).format("MMM YYYY")}</span>
           </div>
+          <Tooltip title="Logout" placement="top">
+            <IconButton onClick={handleLogout}>
+              <KeyboardReturn color="primary" />
+            </IconButton>
+          </Tooltip>
+          <EditDetails />
         </div>
       </Paper>
     ) : (
