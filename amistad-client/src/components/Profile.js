@@ -6,16 +6,15 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Paper from "@material-ui/core/Paper";
 import MuiLink from "@material-ui/core/Link";
 import Button from "@material-ui/core/Button";
-import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
-import Tooltip from "@material-ui/core/Tooltip";
 import Typography from "@material-ui/core/Typography";
 import LocationOn from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
 import { logoutUser, uploadProfileImage } from "../redux/actions/userActions";
 import EditDetails from "./EditDetails";
+import MyButton from "../util/myButton";
 
 const styles = theme => ({
   paper: {
@@ -101,11 +100,13 @@ function Profile({ classes }) {
               hidden="hidden"
               onChange={handleImageChange}
             />
-            <Tooltip title="Edit profile picture" placement="top">
-              <IconButton onClick={handleEditPicture} className="button">
-                <EditIcon color="primary" />
-              </IconButton>
-            </Tooltip>
+            <MyButton
+              tip="Edit profile picture"
+              onClick={handleEditPicture}
+              btnClassName="button"
+            >
+              <EditIcon color="primary" />
+            </MyButton>
           </div>
           <hr />
           <div className="profile-details">
@@ -143,11 +144,9 @@ function Profile({ classes }) {
             <CalendarToday color="primary" />{" "}
             <span>Joined {dayjs(createdAt).format("MMM YYYY")}</span>
           </div>
-          <Tooltip title="Logout" placement="top">
-            <IconButton onClick={handleLogout}>
-              <KeyboardReturn color="primary" />
-            </IconButton>
-          </Tooltip>
+          <MyButton tip="Logout" onClick={handleLogout}>
+            <KeyboardReturn color="primary" />
+          </MyButton>
           <EditDetails />
         </div>
       </Paper>

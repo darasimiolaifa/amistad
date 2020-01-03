@@ -1,27 +1,28 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Grid from "@material-ui/core/Grid";
 import Scream from "../components/Scream";
 import Profile from "../components/Profile";
-
-const endpoint = "https://us-central1-amistad-9f94a.cloudfunctions.net/api";
+import { getScreams } from "../redux/actions/dataActions";
 
 const Home = () => {
-  const [screams, setScream] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchData = async () => {
-      const { data: screams } = await axios.get(`${endpoint}/screams`);
-      setScream(screams);
-    };
-    fetchData();
+    getScreams(dispatch);
   }, []);
-  const recentScreamsMarkup =
-    screams.length > 0 ? (
-      screams.map(scream => <Scream key={scream.screamId} scream={scream} />)
-    ) : (
-      <p>Loading...</p>
-    );
+
+  const { screams, loading } = useSelector(state => ({
+    ...state.data,
+    ...state.ui,
+    ...state.user
+  }));
+  const recentScreamsMarkup = !loading ? (
+    screams.map(scream => <Scream key={scream.screamId} scream={scream} />)
+  ) : (
+    <p>Loading...</p>
+  );
+
   return (
     <Grid container spacing={2}>
       <Grid item sm={8} xs={12}>
