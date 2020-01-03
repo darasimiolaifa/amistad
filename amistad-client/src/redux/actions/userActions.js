@@ -7,15 +7,14 @@ import {
   SET_UNAUTHENTICATED,
   LOADING_USER
 } from "../types";
-
-const endpoint = "https://us-central1-amistad-9f94a.cloudfunctions.net/api";
+import api from "../../util/api";
 
 export const loginUser = async (dispatch, { email, password }, history) => {
   try {
     dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: true } });
     const {
       data: { token }
-    } = await axios.post(`${endpoint}/login`, {
+    } = await axios.post(api.login, {
       email,
       password
     });
@@ -45,7 +44,7 @@ export const signupUser = async (
     dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: true } });
     const {
       data: { token }
-    } = await axios.post(`${endpoint}/signup`, {
+    } = await axios.post(api.signup, {
       email,
       password,
       confirmPassword,
@@ -89,6 +88,7 @@ export const logoutUser = dispatch => {
   delete axios.defaults.headers.common["Authorization"];
   dispatch({ type: SET_UNAUTHENTICATED });
 };
+
 export const updateFormData = (dispatch, target) => {
   dispatch({ type: UPDATE_FORM_DATA, payload: target });
 };
@@ -96,7 +96,7 @@ export const updateFormData = (dispatch, target) => {
 export const getUserData = async dispatch => {
   try {
     dispatch({ type: LOADING_USER });
-    const { data } = await axios.get(`${endpoint}/user`);
+    const { data } = await axios.get(api.user);
     dispatch({ type: SET_USER, payload: data });
   } catch ({ response: { data } }) {
     dispatch({ type: SET_ERRORS, payload: { errors: data } });
@@ -106,7 +106,7 @@ export const getUserData = async dispatch => {
 export const uploadProfileImage = async (dispatch, formData) => {
   try {
     dispatch({ type: LOADING_USER });
-    await axios.post(`${endpoint}/users/image`, formData);
+    await axios.post(api.image, formData);
     await getUserData(dispatch);
   } catch ({ response: { data } }) {
     await getUserData(dispatch);
@@ -117,7 +117,7 @@ export const uploadProfileImage = async (dispatch, formData) => {
 export const editUserDetails = async (dispatch, userDetails) => {
   try {
     dispatch({ type: LOADING_USER });
-    await axios.post(`${endpoint}/user`, userDetails);
+    await axios.post(api.user, userDetails);
     await getUserData(dispatch);
   } catch ({ response: { data } }) {
     console.log(data);

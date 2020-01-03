@@ -6,10 +6,7 @@ const initialState = {
   email: "",
   password: "",
   confirmPassword: "",
-  handle: "",
-  bio: "",
-  location: "",
-  website: ""
+  handle: ""
 };
 
 const uiReducer = (state = initialState, { type, payload }) => {

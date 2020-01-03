@@ -5,3 +5,7 @@ export const LOADING_USER = "LOADING_USER";
 export const UPDATE_FORM_DATA = "UPDATE_FORM_DATA";
 export const SET_LOADING_STATUS = "SET_LOADING_STATUS";
 export const SET_ERRORS = "SET_ERRORS";
+export const SET_SCREAMS = "SET_SCREAMS";
+export const LOADING_DATA = "LOADING_DATA";
+export const LIKE_SCREAM = "LIKE_SCREAM";
+export const UNLIKE_SCREAM = "UNLIKE_SCREAM";
