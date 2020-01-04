@@ -13,12 +13,14 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 
 import MyButton from "../util/myButton";
+import DeleteScream from "./DeleteScream";
 import { likeScream, unlikeScream } from "../redux/actions/dataActions";
 
 const styles = {
   card: {
     display: "flex",
-    marginBottom: 20
+    marginBottom: 20,
+    position: "relative"
   },
   content: {
     padding: 25
@@ -41,7 +43,11 @@ const Scream = ({
     screamId
   }
 }) => {
-  const { likes, authenticated } = useSelector(state => ({ ...state.user }));
+  const {
+    likes,
+    authenticated,
+    credentials: { handle }
+  } = useSelector(state => ({ ...state.user }));
   const dispatch = useDispatch();
 
   // check if logged in user likes this scream
@@ -66,6 +72,10 @@ const Scream = ({
       <FavoriteIcon color="primary" />
     </MyButton>
   );
+  const deleteButton =
+    authenticated && userHandle === handle ? (
+      <DeleteScream screamId={screamId} />
+    ) : null;
   dayjs.extend(relativeTime);
   return (
     <Card className={classes.card}>
@@ -85,6 +95,7 @@ const Scream = ({
         >
           {userHandle}
         </Typography>
+        {deleteButton}
         <Typography variant="body2" color="textSecondary">
           {dayjs(createdAt).fromNow()}
         </Typography>
