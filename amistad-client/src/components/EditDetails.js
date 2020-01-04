@@ -10,6 +10,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import { SET_DIALOG_STATUS } from "../redux/types";
 
 const styles = theme => ({
   ...theme.otherStyling,
@@ -20,8 +21,9 @@ const styles = theme => ({
 
 const EditDetails = ({ classes }) => {
   const dispatch = useDispatch();
-  const { credentials } = useSelector(state => ({
-    ...state.user
+  const { credentials, open } = useSelector(state => ({
+    ...state.user,
+    ...state.ui
   }));
 
   const [formDetails, setFormDetails] = useState({
@@ -30,14 +32,12 @@ const EditDetails = ({ classes }) => {
     website: credentials.website ? credentials.website : ""
   });
 
-  const [open, setOpen] = useState(false);
-
   const handleOpen = () => {
-    setOpen(true);
+    dispatch({ type: SET_DIALOG_STATUS, payload: { open: true } });
   };
 
   const handleClose = () => {
-    setOpen(false);
+    dispatch({ type: SET_DIALOG_STATUS, payload: { open: false } });
   };
 
   const handleChange = ({ target: { name, value } }) => {

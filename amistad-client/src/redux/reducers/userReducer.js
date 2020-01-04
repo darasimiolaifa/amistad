@@ -18,7 +18,7 @@ const initialState = {
 const userReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case SET_USER:
-      return { ...payload, loading: false, authenticated: true };
+      return { ...state, ...payload, loading: false, authenticated: true };
     case SET_AUTHENTICATED:
       return { ...state, authenticated: true };
     case LOADING_USER:
