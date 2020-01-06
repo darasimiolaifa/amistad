@@ -1,16 +1,16 @@
 import React, { Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { editUserDetails } from "../redux/actions/userActions";
+import { editUserDetails } from "../../redux/actions/userActions";
 import Button from "@material-ui/core/Button";
-import MyButton from "../util/myButton";
+import MyButton from "../../util/myButton";
 import EditIcon from "@material-ui/icons/Edit";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
-import { SET_DIALOG_STATUS } from "../redux/types";
+import { SET_DIALOG_STATUS } from "../../redux/types";
 
 const styles = theme => ({
   ...theme.otherStyling,

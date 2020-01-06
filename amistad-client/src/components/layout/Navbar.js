@@ -2,8 +2,8 @@ import React, { Fragment } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import MyButton from "../util/myButton";
-import PostScream from "./PostScream";
+import MyButton from "../../util/myButton";
+import PostScream from "../scream/PostScream";
 
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";

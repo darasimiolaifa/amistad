@@ -6,6 +6,7 @@ export const UPDATE_FORM_DATA = "UPDATE_FORM_DATA";
 export const SET_LOADING_STATUS = "SET_LOADING_STATUS";
 export const SET_ERRORS = "SET_ERRORS";
 export const SET_SCREAMS = "SET_SCREAMS";
+export const SET_SINGLE_SCREAM = "SET_SINGLE_SCREAM";
 export const POST_SCREAM = "POST_SCREAM";
 export const LOADING_DATA = "LOADING_DATA";
 export const LIKE_SCREAM = "LIKE_SCREAM";

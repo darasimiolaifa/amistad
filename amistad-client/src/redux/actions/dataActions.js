@@ -1,5 +1,6 @@
 import {
   SET_SCREAMS,
+  SET_SINGLE_SCREAM,
   SET_ERRORS,
   SET_LOADING_STATUS,
   POST_SCREAM,
@@ -34,6 +35,18 @@ export const postScream = async (dispatch, newScream) => {
   }
 };
 
+export const getSingleScream = async (dispatch, screamId) => {
+  try {
+    dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: true } });
+    const { data: scream } = await axios.get(`${api.screams}/${screamId}`);
+    console.log(scream);
+    dispatch({ type: SET_SINGLE_SCREAM, payload: scream });
+    dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: false } });
+  } catch ({ response: { data } }) {
+    console.log(data);
+  }
+};
+
 export const likeScream = async (dispatch, screamId) => {
   try {
     const { data: scream } = await axios.get(`${api.screams}/${screamId}/like`);
@@ -56,9 +69,7 @@ export const unlikeScream = async (dispatch, screamId) => {
 
 export const deleteScream = async (dispatch, screamId) => {
   try {
-    const {
-      data: { message }
-    } = await axios.delete(`${api.screams}/${screamId}`);
+    await axios.delete(`${api.screams}/${screamId}`);
     dispatch({ type: DELETE_SCREAM, payload: { screamId } });
   } catch (error) {
     console.log(error);

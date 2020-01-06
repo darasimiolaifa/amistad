@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { postScream } from "../redux/actions/dataActions";
+import { postScream } from "../../redux/actions/dataActions";
 import Button from "@material-ui/core/Button";
-import MyButton from "../util/myButton";
+import MyButton from "../../util/myButton";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import Dialog from "@material-ui/core/Dialog";
@@ -16,7 +16,8 @@ const styles = theme => ({
   ...theme.otherStyling,
   submitButton: {
     position: "relative",
-    float: "right"
+    float: "right",
+    marginTop: "10%"
   },
   closeButton: {
     position: "absolute",

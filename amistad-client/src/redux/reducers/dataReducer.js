@@ -1,5 +1,6 @@
 import {
   SET_SCREAMS,
+  SET_SINGLE_SCREAM,
   LOADING_DATA,
   UNLIKE_SCREAM,
   LIKE_SCREAM,
@@ -19,12 +20,17 @@ const dataReducer = (state = initialState, { type, payload }) => {
       return { ...state, loading: true };
     case SET_SCREAMS:
       return { ...state, screams: payload, loading: false };
+    case SET_SINGLE_SCREAM:
+      return { ...state, scream: payload };
     case LIKE_SCREAM:
     case UNLIKE_SCREAM:
       let index = state.screams.findIndex(
         scream => scream.screamId === payload.screamId
       );
       state.screams[index] = payload;
+      if(state.scream.screamId === payload.screamId) {
+        state.scream = payload;
+      }
       return { ...state };
     case DELETE_SCREAM:
       let deleteIndex = state.screams.findIndex(
