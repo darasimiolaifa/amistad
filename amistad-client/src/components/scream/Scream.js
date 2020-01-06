@@ -58,14 +58,14 @@ const Scream = ({
         image={userImage}
         title={userHandle}
         component={Link}
-        to={`/users/${userHandle}`}
+        to={`/user/${userHandle}`}
       />
       <CardContent className={classes.content}>
         <Typography
           variant="h5"
           color="primary"
           component={Link}
-          to={`/users/${userHandle}`}
+          to={`/user/${userHandle}`}
         >
           {userHandle}
         </Typography>

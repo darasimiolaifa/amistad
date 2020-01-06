@@ -12,7 +12,10 @@ import Typography from "@material-ui/core/Typography";
 import LocationOn from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
-import { logoutUser, uploadProfileImage } from "../../redux/actions/userActions";
+import {
+  logoutUser,
+  uploadProfileImage
+} from "../../redux/actions/userActions";
 import EditDetails from "./EditDetails";
 import MyButton from "../../util/myButton";
 
@@ -64,7 +67,7 @@ const styles = theme => ({
   }
 });
 
-function Profile({ classes }) {
+const Profile = ({ classes }) => {
   const dispatch = useDispatch();
   const {
     credentials: { handle, createdAt, imageUrl, bio, website, location },
@@ -93,7 +96,7 @@ function Profile({ classes }) {
       <Paper className={classes.paper}>
         <div className={classes.profile}>
           <div className="image-wrapper">
-            <img src={imageUrl} alt="profile" className="profile-image" />
+            <img src={imageUrl} alt={handle} className="profile-image" />
             <input
               type="file"
               id="imageInput"
@@ -112,7 +115,7 @@ function Profile({ classes }) {
           <div className="profile-details">
             <MuiLink
               component={Link}
-              to={`/users/${handle}`}
+              to={`/user/${handle}`}
               color="primary"
               variant="h5"
             >
@@ -178,6 +181,6 @@ function Profile({ classes }) {
   ) : (
     <p>Loading...</p>
   );
-}
+};
 
 export default withStyles(styles)(Profile);
