@@ -6,6 +6,7 @@ import { getSingleScream } from "../../redux/actions/dataActions";
 import ChatIcon from "@material-ui/icons/Chat";
 import LikeButton from "./LikeButton";
 import Comments from "./Comments";
+import CommentForm from "./CommentForm";
 import MyButton from "../../util/myButton";
 import Dialog from "@material-ui/core/Dialog";
 import { Link } from "react-router-dom";
@@ -15,6 +16,7 @@ import Grid from "@material-ui/core/Grid";
 import CloseIcon from "@material-ui/icons/Close";
 import UnfoldMore from "@material-ui/icons/UnfoldMore";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { SET_ERRORS } from "../../redux/types";
 
 const styles = theme => {
   return {
@@ -56,8 +58,8 @@ const ScreamDialog = ({ classes, screamId }) => {
       userHandle,
       comments
     },
-    isLoading
-  } = useSelector(state => ({ ...state.data, ...state.ui }));
+    loading
+  } = useSelector(state => ({ ...state.data }));
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
 
@@ -68,9 +70,10 @@ const ScreamDialog = ({ classes, screamId }) => {
 
   const handleClose = () => {
     setOpen(false);
+    dispatch({ type: SET_ERRORS, payload: { errors: {} } });
   };
 
-  const expandedScream = isLoading ? (
+  const expandedScream = loading ? (
     <div className={classes.spinnerDiv}>
       <CircularProgress size={200} thickness={2} />
     </div>
@@ -110,6 +113,7 @@ const ScreamDialog = ({ classes, screamId }) => {
           commentCount === 0 ? classes.hiddenRule : classes.visibleRule
         }
       />
+      <CommentForm screamId={screamId} />
       <Comments comments={comments} />
     </Grid>
   );

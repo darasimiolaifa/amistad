@@ -7,14 +7,15 @@ import {
   LOADING_DATA,
   UNLIKE_SCREAM,
   LIKE_SCREAM,
-  DELETE_SCREAM
+  DELETE_SCREAM,
+  ADD_COMMENTS
 } from "../types";
 import axios from "axios";
 import api from "../../util/api";
 
 export const getScreams = async dispatch => {
   try {
-    dispatch({ type: LOADING_DATA });
+    dispatch({ type: LOADING_DATA, payload: { loading: true } });
     const { data: screams } = await axios.get(api.screams);
     dispatch({ type: SET_SCREAMS, payload: screams });
   } catch ({ response: { data } }) {
@@ -31,17 +32,16 @@ export const postScream = async (dispatch, newScream) => {
     dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: false } });
   } catch ({ response: { data } }) {
     console.log(data);
-    dispatch({ type: SET_ERRORS, payload: data });
+    dispatch({ type: SET_ERRORS, payload: { errors: data, isLoading: false } });
   }
 };
 
 export const getSingleScream = async (dispatch, screamId) => {
   try {
-    dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: true } });
+    dispatch({ type: LOADING_DATA, payload: { loading: true } });
     const { data: scream } = await axios.get(`${api.screams}/${screamId}`);
-    console.log(scream);
     dispatch({ type: SET_SINGLE_SCREAM, payload: scream });
-    dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: false } });
+    dispatch({ type: LOADING_DATA, payload: { loading: false } });
   } catch ({ response: { data } }) {
     console.log(data);
   }
@@ -64,6 +64,21 @@ export const unlikeScream = async (dispatch, screamId) => {
     dispatch({ type: UNLIKE_SCREAM, payload: scream });
   } catch ({ response: { data } }) {
     console.log(data);
+  }
+};
+
+export const addComments = async (dispatch, screamId, comment) => {
+  try {
+    dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: true } });
+    const { data: newComment } = await axios.post(
+      `${api.screams}/${screamId}/comments`,
+      comment
+    );
+    dispatch({ type: ADD_COMMENTS, payload: newComment });
+    dispatch({ type: SET_LOADING_STATUS, payload: { isLoading: false } });
+  } catch ({ response: { data } }) {
+    console.log(data);
+    dispatch({ type: SET_ERRORS, payload: { errors: data, isLoading: false } });
   }
 };
 

@@ -5,7 +5,8 @@ import {
   UNLIKE_SCREAM,
   LIKE_SCREAM,
   DELETE_SCREAM,
-  POST_SCREAM
+  POST_SCREAM,
+  ADD_COMMENTS
 } from "../types";
 
 const initialState = {
@@ -17,23 +18,23 @@ const initialState = {
 const dataReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case LOADING_DATA:
-      return { ...state, loading: true };
+      return { ...state, ...payload };
     case SET_SCREAMS:
       return { ...state, screams: payload, loading: false };
     case SET_SINGLE_SCREAM:
       return { ...state, scream: payload };
     case LIKE_SCREAM:
     case UNLIKE_SCREAM:
-      let index = state.screams.findIndex(
+      const index = state.screams.findIndex(
         scream => scream.screamId === payload.screamId
       );
       state.screams[index] = payload;
-      if(state.scream.screamId === payload.screamId) {
+      if (state.scream.screamId === payload.screamId) {
         state.scream = payload;
       }
       return { ...state };
     case DELETE_SCREAM:
-      let deleteIndex = state.screams.findIndex(
+      const deleteIndex = state.screams.findIndex(
         scream => scream.screamId === payload.screamId
       );
       state.screams.splice(deleteIndex, 1);
@@ -43,6 +44,17 @@ const dataReducer = (state = initialState, { type, payload }) => {
         ...state,
         screams: [payload, ...state.screams]
       };
+    case ADD_COMMENTS:
+      const screamIndex = state.screams.findIndex(
+        scream => scream.screamId === payload.screamId
+      );
+      const newScream = {
+        ...state.scream,
+        commentCount: state.scream.commentCount + 1,
+        comments: [payload, ...state.scream.comments]
+      };
+      state.screams[screamIndex] = newScream;
+      return { ...state, scream: newScream };
     default:
       return { ...state };
   }
