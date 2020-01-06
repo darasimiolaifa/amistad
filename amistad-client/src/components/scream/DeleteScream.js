@@ -2,12 +2,12 @@ import React, { Fragment, useState } from "react";
 import { useDispatch } from "react-redux";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
-import MyButton from "../util/myButton";
+import MyButton from "../../util/myButton";
 import DeleteOutline from "@material-ui/icons/DeleteOutline";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { deleteScream } from "../redux/actions/dataActions";
+import { deleteScream } from "../../redux/actions/dataActions";
 
 const styles = {
   deleteButton: {

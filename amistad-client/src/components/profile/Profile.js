@@ -12,9 +12,9 @@ import Typography from "@material-ui/core/Typography";
 import LocationOn from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
-import { logoutUser, uploadProfileImage } from "../redux/actions/userActions";
+import { logoutUser, uploadProfileImage } from "../../redux/actions/userActions";
 import EditDetails from "./EditDetails";
-import MyButton from "../util/myButton";
+import MyButton from "../../util/myButton";
 
 const styles = theme => ({
   paper: {
