@@ -13,3 +13,4 @@ export const LIKE_SCREAM = "LIKE_SCREAM";
 export const UNLIKE_SCREAM = "UNLIKE_SCREAM";
 export const DELETE_SCREAM = "DELETE_SCREAM";
 export const SET_DIALOG_STATUS = "SET_DIALOG_STATUS";
+export const ADD_COMMENTS = "ADD_COMMENTS";
