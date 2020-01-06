@@ -13,9 +13,7 @@ const Home = () => {
   }, []);
 
   const { screams, loading } = useSelector(state => ({
-    ...state.data,
-    ...state.ui,
-    ...state.user
+    ...state.data
   }));
   const recentScreamsMarkup = !loading ? (
     screams.map(scream => <Scream key={scream.screamId} scream={scream} />)

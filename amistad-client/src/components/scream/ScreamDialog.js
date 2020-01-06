@@ -58,7 +58,7 @@ const ScreamDialog = ({ classes, screamId }) => {
       userHandle,
       comments
     },
-    loading
+    screamDialogLoading
   } = useSelector(state => ({ ...state.data }));
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -73,7 +73,7 @@ const ScreamDialog = ({ classes, screamId }) => {
     dispatch({ type: SET_ERRORS, payload: { errors: {} } });
   };
 
-  const expandedScream = loading ? (
+  const expandedScream = screamDialogLoading ? (
     <div className={classes.spinnerDiv}>
       <CircularProgress size={200} thickness={2} />
     </div>

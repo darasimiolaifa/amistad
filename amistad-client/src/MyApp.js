@@ -15,6 +15,7 @@ import { logoutUser, getUserData } from "./redux/actions/userActions";
 import Navbar from "./components/layout/Navbar";
 // Pages
 import home from "./pages/home";
+import user from "./pages/user";
 import signup from "./pages/signup";
 import login from "./pages/login";
 
@@ -41,6 +42,7 @@ const MyApp = () => {
         <div className="container">
           <Switch>
             <Route exact path="/" component={home} />
+            <Route exact path="/user/:handle" component={user} />
             <AuthRoute exact path="/signup" component={signup} />
             <AuthRoute exact path="/login" component={login} />
           </Switch>

@@ -3,6 +3,8 @@ import {
   SET_SINGLE_SCREAM,
   SET_ERRORS,
   SET_LOADING_STATUS,
+  SET_DIALOG_STATUS,
+  LOADING_USER_DATA,
   POST_SCREAM,
   LOADING_DATA,
   UNLIKE_SCREAM,
@@ -38,10 +40,16 @@ export const postScream = async (dispatch, newScream) => {
 
 export const getSingleScream = async (dispatch, screamId) => {
   try {
-    dispatch({ type: LOADING_DATA, payload: { loading: true } });
+    dispatch({
+      type: SET_DIALOG_STATUS,
+      payload: { screamDialogLoading: true }
+    });
     const { data: scream } = await axios.get(`${api.screams}/${screamId}`);
     dispatch({ type: SET_SINGLE_SCREAM, payload: scream });
-    dispatch({ type: LOADING_DATA, payload: { loading: false } });
+    dispatch({
+      type: SET_DIALOG_STATUS,
+      payload: { screamDialogLoading: false }
+    });
   } catch ({ response: { data } }) {
     console.log(data);
   }
@@ -86,7 +94,21 @@ export const deleteScream = async (dispatch, screamId) => {
   try {
     await axios.delete(`${api.screams}/${screamId}`);
     dispatch({ type: DELETE_SCREAM, payload: { screamId } });
-  } catch (error) {
-    console.log(error);
+  } catch ({ response: { data } }) {
+    console.log(data);
+  }
+};
+
+export const getUserDetails = async (dispatch, userHandle) => {
+  try {
+    dispatch({ type: LOADING_USER_DATA, payload: { userLoading: true } });
+    const {
+      data: { screams }
+    } = await axios.get(`/user/${userHandle}`);
+    dispatch({ type: SET_SCREAMS, payload: screams });
+    dispatch({ type: LOADING_USER_DATA, payload: { userLoading: false } });
+  } catch ({ response: { data } }) {
+    console.log(data);
+    dispatch({ type: SET_SCREAMS, payload: [] });
   }
 };
