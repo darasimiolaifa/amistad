@@ -5,5 +5,6 @@ export default {
   signup: `${endpoint}/signup`,
   screams: `${endpoint}/screams`,
   user: `${endpoint}/user`,
-  image: `${endpoint}/users/image`
+  image: `${endpoint}/users/image`,
+  notifications: `${endpoint}/notifications`
 };

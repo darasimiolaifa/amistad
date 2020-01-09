@@ -5,7 +5,8 @@ import {
   SET_ERRORS,
   SET_USER,
   SET_UNAUTHENTICATED,
-  LOADING_USER
+  LOADING_USER,
+  MARK_NOTIFICATIONS_READ
 } from "../types";
 import api from "../../util/api";
 
@@ -122,5 +123,14 @@ export const editUserDetails = async (dispatch, userDetails) => {
   } catch ({ response: { data } }) {
     console.log(data);
     await getUserData(dispatch);
+  }
+};
+
+export const markNotificationsAsRead = async (dispatch, notificationIds) => {
+  try {
+    await axios.post(api.notifications, notificationIds);
+    dispatch({ type: MARK_NOTIFICATIONS_READ });
+  } catch ({ response: { data } }) {
+    console.log(data);
   }
 };

@@ -43,6 +43,7 @@ const MyApp = () => {
           <Switch>
             <Route exact path="/" component={home} />
             <Route exact path="/user/:handle" component={user} />
+            <Route exact path="/user/:handle/screams/:screamId" component={user} />
             <AuthRoute exact path="/signup" component={signup} />
             <AuthRoute exact path="/login" component={login} />
           </Switch>

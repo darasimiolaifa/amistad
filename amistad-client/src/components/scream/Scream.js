@@ -31,6 +31,7 @@ const styles = {
 
 const Scream = ({
   classes,
+  openDialog,
   scream: {
     body,
     createdAt,
@@ -80,7 +81,11 @@ const Scream = ({
           <ChatIcon color="primary" />
         </MyButton>
         <span>{commentCount} comments</span>
-        <ScreamDialog screamId={screamId} userHandle={userHandle} />
+        <ScreamDialog
+          screamId={screamId}
+          userHandle={userHandle}
+          openDialog={openDialog}
+        />
       </CardContent>
     </Card>
   );

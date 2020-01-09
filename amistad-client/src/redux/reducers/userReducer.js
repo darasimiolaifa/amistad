@@ -2,6 +2,7 @@ import {
   SET_USER,
   SET_AUTHENTICATED,
   SET_UNAUTHENTICATED,
+  MARK_NOTIFICATIONS_READ,
   LOADING_USER,
   LIKE_SCREAM,
   UNLIKE_SCREAM
@@ -38,6 +39,9 @@ const userReducer = (state = initialState, { type, payload }) => {
         ...state,
         likes: state.likes.filter(like => like.screamId !== payload.screamId)
       };
+    case MARK_NOTIFICATIONS_READ:
+      state.notifications.forEach(notification => (notification.read = true));
+      return { ...state };
     default:
       return { ...state };
   }
