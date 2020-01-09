@@ -1,4 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, {
+  Fragment,
+  useState,
+  useEffect,
+  useCallback,
+  useRef
+} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import dayjs from "dayjs";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -47,28 +53,32 @@ const styles = theme => {
   };
 };
 
-const ScreamDialog = ({ classes, screamId }) => {
+const ScreamDialog = ({ classes, screamId, userHandle, openDialog }) => {
   const {
-    scream: {
-      body,
-      createdAt,
-      userImage,
-      likeCount,
-      commentCount,
-      userHandle,
-      comments
-    },
+    scream: { body, createdAt, userImage, likeCount, commentCount, comments },
     screamDialogLoading
   } = useSelector(state => ({ ...state.data }));
   const [open, setOpen] = useState(false);
+  const oldPath = useRef(window.location.pathname);
   const dispatch = useDispatch();
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
+    const newPath = `/user/${userHandle}/screams/${screamId}`;
+    if (oldPath.current === newPath) oldPath.current = `/user/${userHandle}`;
+
+    window.history.pushState(null, null, newPath);
+
     setOpen(true);
+
     getSingleScream(dispatch, screamId);
-  };
+  }, [screamId, dispatch, userHandle]);
+
+  useEffect(() => {
+    if (openDialog) handleOpen();
+  }, [openDialog, handleOpen]);
 
   const handleClose = () => {
+    window.history.pushState(null, null, oldPath.current);
     setOpen(false);
     dispatch({ type: SET_ERRORS, payload: { errors: {} } });
   };
