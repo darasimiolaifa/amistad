@@ -19,6 +19,7 @@ import user from "./pages/user";
 import signup from "./pages/signup";
 import login from "./pages/login";
 
+
 const theme = createMuiTheme(appTheme);
 
 const MyApp = () => {
@@ -28,7 +29,7 @@ const MyApp = () => {
     const decodedToken = jwtDecode(token);
     if (decodedToken.exp * 1000 < Date.now()) {
       logoutUser(dispatch);
-      window.location.href("/login");
+      window.location.href = "/login";
     } else {
       dispatch({ type: SET_AUTHENTICATED });
       axios.defaults.headers.common["Authorization"] = token;
@@ -43,7 +44,11 @@ const MyApp = () => {
           <Switch>
             <Route exact path="/" component={home} />
             <Route exact path="/user/:handle" component={user} />
-            <Route exact path="/user/:handle/screams/:screamId" component={user} />
+            <Route
+              exact
+              path="/user/:handle/screams/:screamId"
+              component={user}
+            />
             <AuthRoute exact path="/signup" component={signup} />
             <AuthRoute exact path="/login" component={login} />
           </Switch>

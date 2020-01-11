@@ -28,7 +28,7 @@ const User = ({
       try {
         const {
           data: { user }
-        } = await axios.get(`/user/${handle}`);
+        } = await axios.get(`https://us-central1-amistad-9f94a.cloudfunctions.net/api/user/${handle}`);
         setProfile(user);
       } catch (error) {
         console.log(error);

@@ -104,11 +104,11 @@ export const getUserDetails = async (dispatch, userHandle) => {
     dispatch({ type: LOADING_USER_DATA, payload: { userLoading: true } });
     const {
       data: { screams }
-    } = await axios.get(`/user/${userHandle}`);
+    } = await axios.get(`${api.user}/${userHandle}`);
     dispatch({ type: SET_SCREAMS, payload: screams });
     dispatch({ type: LOADING_USER_DATA, payload: { userLoading: false } });
-  } catch ({ response: { data } }) {
-    console.log(data);
+  } catch (error) {
+    console.log(error);
     dispatch({ type: SET_SCREAMS, payload: [] });
   }
 };
